@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Album BoiBoy</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#111;
+height:100vh;
+overflow:hidden;
+color:white;
+}
+
+/* START */
+#loading{
+position:fixed;
+inset:0;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#000;
+z-index:99999;
+}
+
+.box{text-align:center;padding:20px;}
+
+.btn-start{
+width:180px;height:50px;
+border:none;border-radius:12px;
+background:#8e44ad;color:white;
+font-weight:bold;cursor:pointer;
+}
+
+/* HEADER */
+.header{
+height:60px;
+background:#222;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+font-size:20px;
+position:relative;
+}
+
+.menu{
+position:absolute;
+right:15px;
+font-size:28px;
+cursor:pointer;
+}
+
+/* CONTENT */
+.content{
+height:calc(100vh - 60px);
+overflow-y:auto;
+padding:10px;
+}
+
+.gallery{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+}
+
+.card{
+background:#1e1e1e;
+border-radius:14px;
+overflow:hidden;
+cursor:pointer;
+}
+
+.card img,
+.card video{
+width:100%;
+height:200px;
+object-fit:cover;
+display:block;
+}
+
+.title{
+text-align:center;
+padding:8px;
+font-size:14px;
+}
+
+/* VIEWER */
+.viewer{
+position:fixed;
+inset:0;
+background:black;
+display:none;
+flex-direction:column;
+z-index:9999;
+}
+
+.viewer-header{
+height:60px;
+display:flex;
+align-items:center;
+padding:0 15px;
+background:#111;
+}
+
+.back{
+font-size:28px;
+margin-right:10px;
+cursor:pointer;
+}
+
+.viewer-content{
+flex:1;
+padding:15px;
+}
+
+.frame{
+width:90%;
+aspect-ratio:9/16;
+margin:auto;
+border-radius:16px;
+overflow:hidden;
+background:black;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.frame img,
+.frame video{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.caption{
+text-align:center;
+margin-top:15px;
+}
+
+.btn{
+width:100%;
+height:50px;
+border:none;
+border-radius:12px;
+margin-top:10px;
+font-weight:bold;
+color:white;
+cursor:pointer;
+}
+
+.love{background:#ff3b5c;}
+.save{background:#00b894;}
+.share{background:#0984e3;}
+
+.swipe{
+margin-top:15px;
+text-align:center;
+padding:10px;
+background:rgba(255,255,255,0.08);
+border-radius:10px;
+}
+
+/* MENU */
+#menuPanel{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.5);
+display:none;
+z-index:10000;
+}
+
+.menu-box{
+position:absolute;
+top:0;
+right:0;
+width:240px;
+height:100%;
+background:#1e1e1e;
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.menu-title{
+font-size:18px;
+font-weight:bold;
+margin-bottom:10px;
+}
+
+.menu-box button{
+height:45px;
+border:none;
+border-radius:10px;
+background:#333;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+/* ABOUT */
+#aboutModal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.6);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:20000;
+backdrop-filter:blur(5px);
+}
+
+.about-card{
+width:85%;
+max-width:380px;
+background:#1e1e1e;
+padding:18px;
+border-radius:18px;
+line-height:1.6;
+font-size:14px;
+}
+
+.about-title{
+font-size:18px;
+font-weight:bold;
+margin-bottom:10px;
+text-align:center;
+}
+
+.about-close{
+width:100%;
+height:45px;
+margin-top:15px;
+border:none;
+border-radius:10px;
+background:#333;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+/* MUSIC */
+#musicModal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.6);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:25000;
+}
+
+.music-card{
+width:80%;
+max-width:320px;
+background:#1e1e1e;
+padding:15px;
+border-radius:14px;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.music-card button{
+height:45px;
+border:none;
+border-radius:10px;
+background:#333;
+color:white;
+font-weight:bold;
+}
+
+/* HUD */
+#hud{
+position:fixed;
+top:20px;
+left:50%;
+transform:translateX(-50%);
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(14px);
+padding:12px 16px;
+border-radius:16px;
+display:flex;
+align-items:center;
+gap:10px;
+color:white;
+opacity:0;
+transition:.35s ease;
+z-index:99999;
+}
+
+#hud.show{opacity:1;}
+
+#barWrap{
+width:140px;
+height:6px;
+background:rgba(255,255,255,0.15);
+border-radius:10px;
+overflow:hidden;
+margin-top:6px;
+}
+
+#bar{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#00b894,#55efc4);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- START -->
+<div id="loading">
+<div class="box">
+<h1>Album BoiBoy</h1>
+<p>Tap untuk masuk</p>
+<button class="btn-start" id="startBtn">MASUK</button>
+</div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+Album BoiBoy
+<div class="menu">☰</div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+<div class="gallery" id="gallery"></div>
+</div>
+
+<!-- VIEWER -->
+<div class="viewer" id="viewer">
+
+<div class="viewer-header">
+<div class="back" onclick="closeViewer()">←</div>
+Detail
+</div>
+
+<div class="viewer-content">
+
+<div id="box"></div>
+<div class="caption" id="caption"></div>
+
+<button class="btn love" id="loveBtn">❤️ Like</button>
+<button class="btn save">⬇️ Save</button>
+<button class="btn share">📤 Share</button>
+
+<div class="swipe">Swipe kiri / kanan</div>
+
+</div>
+</div>
+
+<!-- MENU -->
+<div id="menuPanel">
+<div class="menu-box">
+
+<div class="menu-title">Menu</div>
+
+<button onclick="showAbout()">About</button>
+<button onclick="openMusic()">Pilih Lagu</button>
+<button onclick="closeMenu()">Tutup</button>
+
+</div>
+</div>
+
+<!-- ABOUT -->
+<div id="aboutModal">
+<div class="about-card">
+
+<div class="about-title">About Aplikasi</div>
+
+<div>
+Saya membuat web ini bertujuan untuk membuat kenangan BoiBoy agar bisa melihat lagi.
+
+Fitur:
+• Like
+• Share
+• Swipe
+• Music
+
+ARIS.
+
+VERSI 1.2 
+</div>
+
+<button class="about-close" onclick="closeAbout()">Tutup</button>
+
+</div>
+</div>
+
+<!-- MUSIC -->
+<div id="musicModal">
+<div class="music-card">
+
+<div class="menu-title">Pilih Lagu</div>
+
+<button onclick="setMusic('music.mp3')">Lagu 1</button>
+<button onclick="setMusic('music2.mp3')">Lagu 2</button>
+<button onclick="setMusic('music3.mp3')">Lagu 3</button>
+
+<button onclick="closeMusic()">Tutup</button>
+
+</div>
+</div>
+
+<!-- HUD -->
+<div id="hud">
+<div>
+<div id="hudText">Ready</div>
+<div id="barWrap"><div id="bar"></div></div>
+</div>
+</div>
+
+<audio id="bg" loop>
+<source src="music.mp3">
+</audio>
+
+<script>
+
+const loading=document.getElementById("loading");
+const startBtn=document.getElementById("startBtn");
+const bg=document.getElementById("bg");
+
+const gallery=document.getElementById("gallery");
+const viewer=document.getElementById("viewer");
+const box=document.getElementById("box");
+const caption=document.getElementById("caption");
+
+const menuPanel=document.getElementById("menuPanel");
+const aboutModal=document.getElementById("aboutModal");
+const musicModal=document.getElementById("musicModal");
+
+const hud=document.getElementById("hud");
+const hudText=document.getElementById("hudText");
+const bar=document.getElementById("bar");
+
+let current=0;
+
+/* START */
+startBtn.onclick=()=>{
+bg.play().catch(()=>{});
+loading.style.display="none";
+};
+
+/* MENU */
+document.querySelector(".menu").onclick=()=>{
+menuPanel.style.display="block";
+};
+
+function closeMenu(){
+menuPanel.style.display="none";
+}
+
+/* ABOUT */
+function showAbout(){aboutModal.style.display="flex";}
+function closeAbout(){aboutModal.style.display="none";}
+
+/* MUSIC */
+function openMusic(){musicModal.style.display="flex";}
+function closeMusic(){musicModal.style.display="none";}
+
+function setMusic(src){
+bg.src=src;
+bg.play().catch(()=>{});
+}
+
+/* DATA FIX IMAGE + VIDEO */
+const media=[];
+
+/* 1-50 IMAGE */
+for(let i=1;i<=50;i++){
+media.push({
+type:"image",
+file:`foto${i}.jpg`,
+caption:`Foto ${i}`
+});
+}
+
+/* 51-80 VIDEO */
+for(let i=51;i<=80;i++){
+media.push({
+type:"video",
+file:`video${i}.mp4`,
+caption:`Video ${i}`
+});
+}
+
+/* 81-150 IMAGE */
+for(let i=81;i<=150;i++){
+media.push({
+type:"image",
+file:`foto${i}.jpg`,
+caption:`Foto ${i}`
+});
+}
+
+/* RENDER */
+media.forEach((m,i)=>{
+const card=document.createElement("div");
+card.className="card";
+
+if(m.type==="video"){
+card.innerHTML=`
+<video muted>
+<source src="${m.file}">
+</video>
+<div class="title">${m.caption}</div>
+`;
+}else{
+card.innerHTML=`
+<img src="${m.file}">
+<div class="title">${m.caption}</div>
+`;
+}
+
+card.onclick=()=>open(i);
+gallery.appendChild(card);
+});
+
+/* OPEN */
+function open(i){
+current=i;
+viewer.style.display="flex";
+
+const m=media[i];
+
+if(m.type==="video"){
+box.innerHTML=`
+<div class="frame">
+<video controls autoplay>
+<source src="${m.file}" type="video/mp4">
+</video>
+</div>`;
+}else{
+box.innerHTML=`
+<div class="frame">
+<img src="${m.file}">
+</div>`;
+}
+
+caption.innerText=m.caption;
+updateLikeUI();
+}
+
+/* CLOSE */
+function closeViewer(){
+viewer.style.display="none";
+box.innerHTML="";
+}
+
+/* LIKE */
+const liked=new Set();
+const loveBtn=document.getElementById("loveBtn");
+
+function updateLikeUI(){
+loveBtn.innerText=liked.has(current)?"💔 Unlike":"❤️ Like";
+}
+
+loveBtn.onclick=()=>{
+if(liked.has(current))liked.delete(current);
+else liked.add(current);
+updateLikeUI();
+};
+
+/* SAVE */
+document.querySelector(".save").onclick=()=>{
+
+let p=0;
+hud.classList.add("show");
+hudText.innerText="Downloading...";
+bar.style.width="0%";
+
+const t=setInterval(()=>{
+
+p+=5;
+bar.style.width=p+"%";
+
+if(p>=100){
+clearInterval(t);
+
+const a=document.createElement("a");
+a.href=media[current].file;
+a.download=media[current].file;
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+
+hudText.innerText="Saved";
+
+setTimeout(()=>hud.classList.remove("show"),800);
+}
+
+},40);
+
+};
+
+/* SHARE */
+document.querySelector(".share").onclick=async()=>{
+try{
+await navigator.share({
+title:"Album",
+text:media[current].caption,
+url:location.href
+});
+}catch(e){}
+};
+
+/* SWIPE FIX */
+let startX=0;
+
+viewer.addEventListener("touchstart",(e)=>{
+startX=e.touches[0].clientX;
+});
+
+viewer.addEventListener("touchend",(e)=>{
+let endX=e.changedTouches[0].clientX;
+let diff=startX-endX;
+
+if(diff>60 && current<media.length-1)open(current+1);
+if(diff<-60 && current>0)open(current-1);
+});
+
+</script>
+
+</body>
+</html>
